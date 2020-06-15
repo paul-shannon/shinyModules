@@ -16,8 +16,6 @@ dataTableServer <- function(input, output, session,
 
     output$dataTable <- DT::renderDataTable({
        visibleRowsImmediate <- visibleRows()
-       #printf("visibleRowsImmediate:")
-       #print(visibleRowsImmediate)
        if(length(visibleRowsImmediate) > 0){
            if(visibleRowsImmediate[1] == "all"){
                tbl.sub <- tbl
