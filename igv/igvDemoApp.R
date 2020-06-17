@@ -7,14 +7,15 @@ tbl.snps <- read.table("threeSnps.tsv", header=TRUE, sep="\t", as.is=TRUE, row.n
 
 
 ui <- fluidPage(
-   div(igvUI("igv1"),
+   div(igvUI("igv"),
        style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
+   messageBoxUI(id="messageBox.igv", title="igvselection", titleSpan=2, boxSpan=8),
    div(dataTableUI("snpDataTable"),
           style="margin: 10px; margin-bottom: 30px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
    actionButton("searchButton", "Search"),
    actionButton("addTrackButton", "Add Track"),
    actionButton("getChromLoc", "Get Region"),
-   messageBoxUI(id="messageBox.rsid", title="snps", titleSpan=1, boxSpan=8)
+   messageBoxUI(id="messageBox.snpTable", title="snps", titleSpan=1, boxSpan=8)
    )
 #----------------------------------------------------------------------------------------------------
 server <- function(input, output, session){
@@ -27,12 +28,14 @@ server <- function(input, output, session){
                      pageLength=10,
                      visibleRows = reactive("all"))
 
-   callModule(messageBoxServer, "messageBox.rsid", newContent=roi)
+   callModule(messageBoxServer, "messageBox.snpTable", newContent=roi)
 
-   callModule(igvServer, "igv1",
-              genome="hg38",
-              geneModelDisplayMode="COLLAPSED",
-              locus="APOE")
+   selectedEntity <- callModule(igvServer, "igv",
+                                genome="hg38",
+                                geneModelDisplayMode="COLLAPSED",
+                                locus="APOE")
+
+   callModule(messageBoxServer, "messageBox.igv", newContent=selectedEntity)
 
    observe({
       rsids <- roi()
