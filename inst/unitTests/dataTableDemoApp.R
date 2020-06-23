@@ -1,6 +1,5 @@
-library(shiny)
-source("../messageBox/messageBoxModule.R")
-source("dataTableModule.R")
+library(shinyModules)
+source("~/github/shinyModules/messageBox/messageBoxModule.R")
 tbl.demo <- mtcars
 fatLine <- paste(LETTERS, collapse="")
 multiFatLine <- sprintf("%s\n%s\n%s\n", fatLine, fatLine, fatLine, fatLine)
@@ -34,5 +33,5 @@ server <- function(input, output, session){
   }
 
 #----------------------------------------------------------------------------------------------------
-runApp(shinyApp(ui, server), port=9088)
+runApp(shinyApp(ui, server), port=9033)
 

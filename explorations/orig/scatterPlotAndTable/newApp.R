@@ -45,5 +45,5 @@ server <- function(input, output, session){
   callModule(messageBoxServer, "tableSelectionMessageBoxModule", newContent=tableSelectionList)
   }
 
-runApp(shinyApp(ui, server), port=9028)
+runApp(shinyApp(ui, server), port=9088)
 

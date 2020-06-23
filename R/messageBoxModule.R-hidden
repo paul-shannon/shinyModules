@@ -1,5 +1,7 @@
 library(shiny)
 
+printf <- function(...) print(noquote(sprintf(...)))
+
 messageBoxUI <- function(id, title, titleSpan=1, boxSpan=11){
    fluidRow(
       if(titleSpan > 0) column(titleSpan, span(title)),
@@ -8,11 +10,7 @@ messageBoxUI <- function(id, title, titleSpan=1, boxSpan=11){
    }
 
 messageBoxServer <- function(input, output, session, newContent){
-    #incomingValue <- newContent()
-    #if(!is.null(incomingValue) && nchar(incomingValue) > 0)
-        output$messageBox <- renderPrint(newContent())
-    #else
-    #    output$message <- renderPrint("")
+  output$messageBox <- renderPrint(newContent())
   }
 
 

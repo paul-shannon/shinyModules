@@ -1,5 +1,8 @@
 library(shiny)
 library(igvShiny)
+
+printf <- function(...) print(noquote(sprintf(...)))
+
 #----------------------------------------------------------------------------------------------------
 igvUI <- function(id){
   tagList(
