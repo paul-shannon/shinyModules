@@ -5,19 +5,26 @@
 #'
 #' @param id  character string, the html document's widget id
 #' @param title  character string, title for the box
-#' @param titleSpan integer, width in bootstrap units (max totaling 12)
-#' @param boxSpan  integer, width in bootstrap units (max totaling 12)
+#' @param boxWidth integer pixels, 200 by default
+#' @param boxHeight  integer pixels, 30 by default
+#' @param fontSize  integer pixels, 20 by default
+#' @param backgroundColor character string, uses standard CSS naming conventions, "beige" by default
 #'
 #' @aliases messageBoxUI
 #' @rdname messageBoxUI
 #'
 #' @export
 #'
-messageBoxUI <- function(id, title, titleSpan=1, boxSpan=11){
+messageBoxUI <- function(id, title, boxWidth=200, boxHeight=30, fontSize=20, backgroundColor="beige"){
    fluidRow(
-      if(titleSpan > 0) column(titleSpan, span(title)),
-      column(boxSpan, verbatimTextOutput(NS(id, "messageBox")))
+    div(
+      div(tags$label(title), style="margin-left: 10px;"),
+      div(htmlOutput(outputId=NS(id, "messageBox"),
+                     style=sprintf("background-color: %s; padding-left: 10px; width: %dpx; height: %dpx; font-size:%dpx;",
+                                   backgroundColor, boxWidth, boxHeight, fontSize)),
+         style=sprintf("margin-left: 5px; padding=10px; border: 1px solid gray; width: %dpx;", boxWidth+2))
       )
+     )
    }
 
 #----------------------------------------------------------------------------------------------------
@@ -34,7 +41,7 @@ messageBoxUI <- function(id, title, titleSpan=1, boxSpan=11){
 #' @export
 #'
 messageBoxServer <- function(input, output, session, newContent){
-  output$messageBox <- renderPrint(newContent())
+  output$messageBox <- renderText(newContent())
   }
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))

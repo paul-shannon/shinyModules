@@ -4,16 +4,27 @@
 \alias{messageBoxUI}
 \title{the UI for a very simple message box module}
 \usage{
-messageBoxUI(id, title, titleSpan = 1, boxSpan = 11)
+messageBoxUI(
+  id,
+  title,
+  boxWidth = 200,
+  boxHeight = 30,
+  fontSize = 20,
+  backgroundColor = "beige"
+)
 }
 \arguments{
 \item{id}{character string, the html document's widget id}
 
 \item{title}{character string, title for the box}
 
-\item{titleSpan}{integer, width in bootstrap units (max totaling 12)}
+\item{boxWidth}{integer pixels, 200 by default}
 
-\item{boxSpan}{integer, width in bootstrap units (max totaling 12)}
+\item{boxHeight}{integer pixels, 30 by default}
+
+\item{fontSize}{integer pixels, 20 by default}
+
+\item{backgroundColor}{character string, uses standard CSS naming conventions, "beige" by default}
 }
 \description{
 the UI for a very simple message box module

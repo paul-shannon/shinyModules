@@ -1,9 +1,12 @@
 library(shinyModules)
 #----------------------------------------------------------------------------------------------------
 ui <- fluidPage(
-        messageBoxUI(id="messageBox.1", title="box 1", titleSpan=2, boxSpan=10),
-        messageBoxUI(id="messageBox.2", title="box 2", titleSpan=1, boxSpan=8),
-        actionButton("randomTextButton", label= "Generate random Text",
+    messageBoxUI(id="messageBox.1", title="random mixed text"), # , boxWidth=200, fontSize=12),
+
+    messageBoxUI(id="messageBox.2", title="lower case", boxWidth=400, boxHeight=50,
+                 fontSize=30, backgroundColor="lightgray"),
+
+    actionButton("randomTextButton", label= "Generate random Text",
                      style="margin-top: 40px; margin-left: 200px;")
         )
 
@@ -24,4 +27,4 @@ server <- function(input, output, session)
 
 } # server
 #----------------------------------------------------------------------------------------------------
-runApp(shinyApp(ui, server), port=9036)
+runApp(shinyApp(ui, server), port=9086)

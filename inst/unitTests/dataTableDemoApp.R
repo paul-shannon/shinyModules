@@ -8,7 +8,7 @@ tbl.demo$fatLine <- multiFatLine
 ui <- fluidPage(
       div(dataTableUI("table"),
           style="margin: 20px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
-      messageBoxUI(id="messageBox.1", title=NULL, titleSpan=0, boxSpan=10),
+      messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=80, fontSize=14),
       div(dataTableUI("subtable"),
           style="margin: 20px; padding: 10px; border: 3px solid black; border-radius: 10px;")
       )
