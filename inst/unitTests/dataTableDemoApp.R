@@ -1,5 +1,5 @@
 library(shinyModules)
-source("~/github/shinyModules/messageBox/messageBoxModule.R")
+#----------------------------------------------------------------------------------------------------
 tbl.demo <- mtcars
 fatLine <- paste(LETTERS, collapse="")
 multiFatLine <- sprintf("%s\n%s\n%s\n", fatLine, fatLine, fatLine, fatLine)

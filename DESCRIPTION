@@ -1,7 +1,7 @@
 Package: shinyModules
 Type: Package
 Title: useful shiny modules
-Version: 1.0.1
+Version: 1.0.2
 Date: 2020-06-22
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
@@ -9,11 +9,12 @@ Depends: R (>= 3.5.0), shiny, igvShiny
 Imports: DT
 Description:  a well-behaved module form of a DataTable widget
 License: MIT
-LazyLoad: yes
+LazyLoad: yesx
 Collate:
    'dataTableModule.R'
    'igvModule.R'
+   'messageBoxModule.R'
+   'iframeSearchModule.R'
 NeedsCompilation: no
-Packaged: 2018-03-22 20:02:10 UTC; paul
 Encoding: UTF-8
 RoxygenNote: 7.1.0

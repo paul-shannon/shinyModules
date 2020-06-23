@@ -1,6 +1,5 @@
 library(shinyModules)
-source("~/github/shinyModules/messageBox/messageBoxModule.R")
-
+#--------------------------------------------------------------------------------------------------------------
 file <- system.file(package="shinyModules", "extdata", "threeSnps.tsv")
 tbl.snps <- read.table(file, header=TRUE, sep="\t", as.is=TRUE, row.names=1)
 
@@ -16,7 +15,7 @@ ui <- fluidPage(
    actionButton("getChromLoc", "Get Region"),
    messageBoxUI(id="messageBox.snpTable", title="snps", titleSpan=1, boxSpan=8)
    )
-#----------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------
 server <- function(input, output, session){
 
    roi <- reactiveVal("APOE")
@@ -59,6 +58,6 @@ server <- function(input, output, session){
       })
 
 } # server
-#----------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------
 runApp(shinyApp(ui, server), port=9034)
 

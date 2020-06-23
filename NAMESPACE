@@ -2,7 +2,11 @@
 
 export(dataTableServer)
 export(dataTableUI)
+export(iframeSearchServer)
+export(iframeSearchUI)
 export(igvServer)
 export(igvUI)
+export(messageBoxServer)
+export(messageBoxUI)
 import(igvShiny)
 import(shiny)
