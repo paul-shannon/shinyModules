@@ -2,4 +2,7 @@
 
 export(dataTableServer)
 export(dataTableUI)
+export(igvServer)
+export(igvUI)
+import(igvShiny)
 import(shiny)

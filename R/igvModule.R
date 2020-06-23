@@ -1,8 +1,16 @@
-library(shiny)
-library(igvShiny)
-
-printf <- function(...) print(noquote(sprintf(...)))
-
+#----------------------------------------------------------------------------------------------------
+#' the UI for a DataTable shiny module
+#'
+#' @import shiny
+#' @import igvShiny
+#'
+#' @param id  the html document's widget id
+#'
+#' @aliases igvUI
+#' @rdname igvUI
+#'
+#' @export
+#'
 #----------------------------------------------------------------------------------------------------
 igvUI <- function(id){
   tagList(
@@ -10,6 +18,21 @@ igvUI <- function(id){
     )
    }
 #----------------------------------------------------------------------------------------------------
+#' the server for an igv.js shiny module
+#'
+#' @param input enviroment provide by shiny
+#' @param output enviroment provide by shiny
+#' @param session enviroment provide by shiny
+#' @param genome  character string, eg "hg38"
+#' @param locus  character string, eg "APOE" or "chr13:1000000-1001050"
+#' @param geneModelDisplayMode character string, COLLAPSED, SQUISHED, EXPANDED
+#' @param geneModeTrackHeight integer, eg 200
+#'
+#' @aliases igvServer
+#' @rdname igvServer
+#'
+#' @export
+#'
 igvServer <- function(input, output, session,
                       genome,
                       locus,
@@ -65,4 +88,5 @@ igvServer <- function(input, output, session,
 
 } # igvServer
 #----------------------------------------------------------------------------------------------------
+printf <- function(...) print(noquote(sprintf(...)))
 

@@ -1,7 +1,7 @@
+#----------------------------------------------------------------------------------------------------
 #' the UI for a DataTable shiny module
 #'
 #' @import shiny
-## @import DT
 #'
 #' @param id  the html document's widget id
 #'
@@ -9,14 +9,15 @@
 #' @rdname dataTableUI
 #'
 #' @export
+#'
 dataTableUI <- function(id){
   tagList(
     DT::DTOutput(NS(id, "dataTable"))
     )
   }
 
+#----------------------------------------------------------------------------------------------------
 #' the server for a DataTable shiny module
-#'
 #'
 #' @param input enviroment provide by shiny
 #' @param output enviroment provide by shiny
@@ -31,6 +32,7 @@ dataTableUI <- function(id){
 #' @rdname dataTableServer
 #'
 #' @export
+#'
 dataTableServer <- function(input, output, session,
                             tbl,
                             selectionPolicy="single",
