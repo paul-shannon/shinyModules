@@ -7,12 +7,12 @@ tbl.snps <- read.table(file, header=TRUE, sep="\t", as.is=TRUE, row.names=1)
 ui <- fluidPage(
    div(igvUI("igv"),
        style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
+   #actionButton("searchButton", "Search"),
+   actionButton("addTrackButton", "Add Track"),
+   #actionButton("getChromLoc", "Get Region"),
    messageBoxUI(id="messageBox.igv", title="igv selection", boxWidth= 600),
    div(dataTableUI("snpDataTable"),
           style="margin: 10px; margin-bottom: 30px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
-   actionButton("searchButton", "Search"),
-   actionButton("addTrackButton", "Add Track"),
-   actionButton("getChromLoc", "Get Region"),
    messageBoxUI(id="messageBox.snpTable", title="snps", boxWidth=600)
    )
 #--------------------------------------------------------------------------------------------------------------

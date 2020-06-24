@@ -43,7 +43,8 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "homologene" = "https://www.ncbi.nlm.nih.gov/homologene/?term=%s",
              "kegg"       = "https://www.genome.jp/dbget-bin/www_bfind_sub?mode=bfind&max_hit=1000&dbkey=kegg&keywords=%s",
              "dbsnp"      = "https://www.ncbi.nlm.nih.gov/snp/?term=%s",
-             "google"     = "https://www.google.com/search?q=%s")
+             "google"     = "https://www.google.com/search?q=%s",
+             "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search")
 
      uri <- sprintf(url, goi)
      htmlText <- tags$iframe(src=uri, is="x-frame-bypass", height=1000, width="100%")
