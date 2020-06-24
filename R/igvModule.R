@@ -1,3 +1,4 @@
+printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 #' the UI for a DataTable shiny module
 #'
@@ -88,5 +89,4 @@ igvServer <- function(input, output, session,
 
 } # igvServer
 #----------------------------------------------------------------------------------------------------
-printf <- function(...) print(noquote(sprintf(...)))
 
