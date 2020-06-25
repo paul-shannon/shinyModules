@@ -8,7 +8,7 @@ dbConnection <- dbConnect(driver, dbname = "sqlite.db")
 template.comment <- data.frame(author="",
                                timestamp=Sys.time(),
                                entity="",
-                               tags="",
+                               #tags="",
                                text="",
                                stringsAsFactors=FALSE)
 
