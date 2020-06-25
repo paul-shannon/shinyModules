@@ -44,7 +44,8 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "kegg"       = "https://www.genome.jp/dbget-bin/www_bfind_sub?mode=bfind&max_hit=1000&dbkey=kegg&keywords=%s",
              "dbsnp"      = "https://www.ncbi.nlm.nih.gov/snp/?term=%s",
              "google"     = "https://www.google.com/search?q=%s",
-             "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search")
+             "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search",
+             "comments"   = "https://docs.google.com/document/d/e/2PACX-1vRJqN1rnkywno3WeiV16-gVF50KlIR81Xztbl7ZDtqaqVqtWEzckdXFppb2N-kWgEGupnzmY8tY_cSt/pub?embedded=true")
 
      uri <- sprintf(url, goi)
      htmlText <- tags$iframe(src=uri, is="x-frame-bypass", height=1000, width="100%")
