@@ -6,29 +6,50 @@ multiFatLine <- sprintf("%s\n%s\n%s\n", fatLine, fatLine, fatLine, fatLine)
 tbl.demo$fatLine <- multiFatLine
 #----------------------------------------------------------------------------------------------------
 ui <- fluidPage(
-      div(dataTableUI("table"),
-          style="margin: 20px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
-      messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=80, fontSize=14),
-      div(dataTableUI("subtable"),
-          style="margin: 20px; padding: 10px; border: 3px solid black; border-radius: 10px;")
-      )
+
+    div(
+      dataTableUI("table"),
+      style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;"),
+
+    messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=40, fontSize=14),
+    selectInput("carSelector", "Car:", rownames(mtcars)),
+
+    div(
+      dataTableUI("subtable"),
+      style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;")
+
+    ) # fluidPage
 
 #----------------------------------------------------------------------------------------------------
 server <- function(input, output, session){
 
   rowNames <- reactiveVal("none")
 
-  rowNames <- callModule(dataTableServer, "table", tbl=tbl.demo, #mtcars,
+  rowNames <- callModule(dataTableServer, "table", tbl=tbl.demo,
                          selectionPolicy="multiple",
-                         pageLength=10,
-                         visibleRows = reactive("all"))
+                         pageLength=6,
+                         visibleRows=reactive("all"))
 
   callModule(messageBoxServer, "messageBox.1", newContent=rowNames)
 
-  callModule(dataTableServer, "subtable", tbl=mtcars,
-             selectionPolicy="none",
-             pageLength=10,
+  callModule(dataTableServer, "subtable", tbl=tbl.demo,
+             selectionPolicy="single",
+             pageLength=6,
              visibleRows=rowNames)
+
+  observeEvent(input$carSelector, ignoreInit=TRUE, {
+     printf("carSelector event")
+     #tbl <- mtcars
+     carName <- input$carSelector
+     printf("%s", carName)
+     callModule(dataTableServer,
+                "subtable",
+                tbl.demo,
+                selectionPolicy="single",
+                pageLength=10,
+                visibleRows=reactive("all"),
+                searchTerm=reactive(carName))
+     })
 
   }
 

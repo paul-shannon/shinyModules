@@ -1,7 +1,7 @@
 Package: shinyModules
 Type: Package
 Title: useful shiny modules
-Version: 1.0.7
+Version: 1.0.8
 Date: 2020-06-25
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>

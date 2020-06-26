@@ -12,6 +12,7 @@ dataTableServer(
   selectionPolicy = "single",
   pageLength = 5,
   visibleRows,
+  searchTerm = reactive(""),
   nowrap = TRUE
 )
 }
@@ -29,6 +30,8 @@ dataTableServer(
 \item{pageLength}{integer typically 5, 10, 25 or 50}
 
 \item{visibleRows}{"all", "none", or a list of rownames}
+
+\item{searchTerm}{character string, "" by default}
 
 \item{nowrap}{logcial default TRUE}
 }

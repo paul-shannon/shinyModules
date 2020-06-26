@@ -26,6 +26,7 @@ dataTableUI <- function(id){
 #' @param selectionPolicy character string, single, multiple or none
 #' @param pageLength  integer typically 5, 10, 25 or 50
 #' @param visibleRows  "all", "none", or a list of rownames
+#' @param searchTerm character string, "" by default
 #' @param nowrap  logcial default TRUE
 #'
 #' @aliases dataTableServer
@@ -38,9 +39,11 @@ dataTableServer <- function(input, output, session,
                             selectionPolicy="single",
                             pageLength=5,
                             visibleRows,
+                            searchTerm=reactive(""),
                             nowrap=TRUE) {
 
     output$dataTable <- DT::renderDataTable({
+       printf("entering renderDataTable, nrow: %d", nrow(tbl))
        visibleRowsImmediate <- visibleRows()
        if(length(visibleRowsImmediate) > 0){
            if(visibleRowsImmediate[1] == "all"){
@@ -50,7 +53,7 @@ dataTableServer <- function(input, output, session,
            } else {
                tbl.sub <- tbl[visibleRowsImmediate,]
            }
-           printf("entering renderDataTable, nrow: %d", nrow(tbl))
+
            DTclass <- ""
            if(nowrap) DTclass <- "nowrap display"
            DT::datatable(tbl.sub,
@@ -59,10 +62,12 @@ dataTableServer <- function(input, output, session,
                          #class='nowrap display',
                          options=list(dom='<lfip<t>>',
                                       scrollX=TRUE,
+                                      search=list(caseInsensitive=TRUE, search=searchTerm()),
                                       lengthMenu = c(3,5,10,50),
                                       pageLength = pageLength,
                                       paging=TRUE),
-                         selection=selectionPolicy)
+                         selection=list(mode=selectionPolicy))
+
         } # if length(visibleRowsImmediate) > 0
     })  # renderDataTable
 

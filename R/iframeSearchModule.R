@@ -45,6 +45,7 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "dbsnp"      = "https://www.ncbi.nlm.nih.gov/snp/?term=%s",
              "google"     = "https://www.google.com/search?q=%s",
              "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search",
+             "clinvar"    = "https://www.ncbi.nlm.nih.gov/clinvar/?term=%s[gene]",
              "comments"   = "https://docs.google.com/document/d/e/2PACX-1vRJqN1rnkywno3WeiV16-gVF50KlIR81Xztbl7ZDtqaqVqtWEzckdXFppb2N-kWgEGupnzmY8tY_cSt/pub?embedded=true")
 
      uri <- sprintf(url, goi)

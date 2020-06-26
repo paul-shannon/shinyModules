@@ -3,7 +3,8 @@ library(shinyModules)
 ui <- fluidPage(
         selectInput("geneSelector", "Gene:", c("", "Myc", "APOE", "bogus", "rs61825286")),
         selectInput("websiteSelector", "Website:",
-                     c("GeneCards", "HomoloGene", "PubMed", "dbSNP", "google", "rVarBase", "comments")),
+                    c("GeneCards", "HomoloGene", "PubMed", "dbSNP", "google",
+                      "rVarBase", "ClinVar", "comments")),
          div(iframeSearchUI(id="iframe", title="fubar"),
            style="margin: 10px; margin-bottom: 30px; padding: 10px;"),
         )
