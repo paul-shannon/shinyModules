@@ -61,6 +61,8 @@ server <- function(input, output, session){
                 wrapLongTextInCells=reactive(wrapLongTextInCells))
      })
 
+  observeEvent(input$wrapOrNoWrap, ignoreInit=TRUE, {
+
   observeEvent(input$termSearcher, ignoreInit=TRUE, {
      printf("termSearcher event")
      wrapLongTextInCells <- input$wrapOrNoWrap == "yes"
