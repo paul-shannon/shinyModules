@@ -28,7 +28,7 @@ dataTableUI <- function(id){
 #' @param visibleRows  "all", "none", or a list of rownames
 #' @param selectedRows character string, reactive(NULL)  by default
 #' @param searchTerm character string, "" by default
-#' @param nowrap  logcial default TRUE
+#' @param wrapLongTextInCells  logcial default TRUE
 #'
 #' @aliases dataTableServer
 #' @rdname dataTableServer
@@ -38,57 +38,84 @@ dataTableUI <- function(id){
 dataTableServer <- function(input, output, session,
                             tbl,
                             selectionPolicy="single",
-                            pageLength=5,
+                            pageLength=reactive(5),
                             visibleRows=reactive(head(rownames(tbl))),
                             selectedRows=reactive(NULL),
-                            searchTerm=reactive(""),
-                            nowrap=TRUE) {
+                            searchTerm=reactive(NULL),
+                            wrapLongTextInCells=reactive(TRUE)) {
 
     output$dataTable <- DT::renderDataTable({
-        printf("entering renderDataTable, nrow: %d", nrow(tbl))
+
         selectedRowNames <- selectedRows()
-        #selectedRowNames <- "Datsun 710"
+        searchTermString <- searchTerm()
         printf("2")
-        printf("selectedRowNames: %s", selectedRowNames)
-        if(is.null(selectedRowNames))
-          selectedRowNames <- ""
-        printf("      selected rows: %s", paste(selectedRowNames, collapse=", "))
-        visibleRowsImmediate <- visibleRows()
-        printf("3")
-        if(length(visibleRowsImmediate) > 0){
-           if(visibleRowsImmediate[1] == "all"){
-               tbl.sub <- tbl
-           } else if(visibleRowsImmediate[1] == "none") {
-               tbl.sub <- data.frame()
-           } else {
-               tbl.sub <- tbl[visibleRowsImmediate,]
+
+             #------------------------------------------------------------
+             # search mode, or row selection mode, or neither.
+             # cannot be both.  selection is given priority.
+             #------------------------------------------------------------
+
+        mode <- "neitherSelectionNorSearch"
+        if(!is.null(selectedRowNames)){
+           mode <- "selectRows"
+           printf("selectedRowNames: %s", paste(selectedRowNames, collapse=","))
            }
-
-           printf("4")
-           DTclass <- ""
-           printf("5")
-           if(nowrap) DTclass <- "nowrap display"
-           printf("6")
-           searchTermString <- searchTerm()
+        if(is.null(selectedRowNames)){
            if(!is.null(searchTermString))
-               if(nchar(searchTermString) > 0)
-                  DTclass <- "display"
-           searchTermString <- ""
-           printf("7")
-           printf("selectedRowNames: %s", selectedRowNames)
-           DT::datatable(tbl.sub,
-                         rownames=TRUE,
-                         class=DTclass,
-                         #class='nowrap display',
-                         options=list(dom='<lfip<t>>',
-                                      scrollX=TRUE,
-                                      search=list(caseInsensitive=TRUE, search=searchTermString),
-                                      lengthMenu = c(3,5,10,50),
-                                      pageLength = pageLength,
-                                      paging=TRUE),
-                         selection=list(mode=selectionPolicy, selected=selectedRowNames))
+              mode <- "search"
+           }
+        printf("========= mode: %s", mode)
 
-        } # if length(visibleRowsImmediate) > 0
+        visibleRowsImmediate <- visibleRows()
+        printf("--- visibleRowsImmediate")
+        print(visibleRowsImmediate)
+
+        tbl.sub <- data.frame()   # an empty table by default
+
+        if(length(visibleRowsImmediate) > 0){
+           if(visibleRowsImmediate[1] == "all")
+              tbl.sub <- tbl
+           #else if(visibleRowsImmediate[1] == "none")
+           #   tbl.sub <- data.frame()
+           else{
+              printf("make 1 or a few rows visible");
+              tbl.sub <- tbl[visibleRowsImmediate,]
+              }
+           } # if
+
+        printf("=== tbl.sub, number of rows: %d", nrow(tbl.sub))
+
+        wrapText <- wrapLongTextInCells()
+        printf("=== wrapText?: %s", wrapText)
+        DTclass <- "display"
+        if(!wrapText)
+            DTclass <- paste0(DTclass, " nowrap")
+        printf("=== DTclass: %s", DTclass)
+
+             #------------------------------------------------------------
+             # table can be searched, or rows can be selected, but not
+             # both at the same time.
+             #------------------------------------------------------------
+
+        selectionOption <- list()
+        searchOption <- list()
+
+        if(mode == "selectRows")
+           selectionOption <- list(mode=selectionPolicy, selected=selectedRowNames)
+        if(mode == "search")
+           searchOption <- list(caseInsensitive=TRUE, search=searchTermString)
+
+        DT::datatable(tbl.sub,
+                      rownames=TRUE,
+                      class='', #DTclass,
+                      options=list(dom='<lfip<t>>',
+                                   scrollX=TRUE,
+                                   search=searchOption,
+                                   lengthMenu = c(3,5,10,50),
+                                   pageLength = pageLength(),
+                                   paging=TRUE),
+                      selection=selectionOption)
+        # } # if length(visibleRowsImmediate) > 0
     })  # renderDataTable
 
   tableSelection <- reactive({

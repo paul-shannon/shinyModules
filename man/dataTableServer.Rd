@@ -10,11 +10,11 @@ dataTableServer(
   session,
   tbl,
   selectionPolicy = "single",
-  pageLength = 5,
+  pageLength = reactive(5),
   visibleRows = reactive(head(rownames(tbl))),
   selectedRows = reactive(NULL),
-  searchTerm = reactive(""),
-  nowrap = TRUE
+  searchTerm = reactive(NULL),
+  wrapLongTextInCells = reactive(TRUE)
 )
 }
 \arguments{
@@ -32,9 +32,11 @@ dataTableServer(
 
 \item{visibleRows}{"all", "none", or a list of rownames}
 
+\item{selectedRows}{character string, reactive(NULL)  by default}
+
 \item{searchTerm}{character string, "" by default}
 
-\item{nowrap}{logcial default TRUE}
+\item{wrapLongTextInCells}{logcial default TRUE}
 }
 \description{
 the server for a DataTable shiny module
