@@ -1,8 +1,8 @@
 Package: shinyModules
 Type: Package
 Title: useful shiny modules
-Version: 1.0.8
-Date: 2020-06-25
+Version: 1.0.9
+Date: 2020-06-29
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Depends: R (>= 3.5.0), shiny, igvShiny
@@ -16,6 +16,7 @@ Collate:
    'messageBoxModule.R'
    'iframeSearchModule.R'
    'commentsModule.R'
+   'ggAnalyteLinePlotModule.R'
 NeedsCompilation: no
 Encoding: UTF-8
 RoxygenNote: 7.1.0

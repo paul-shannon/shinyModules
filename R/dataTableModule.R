@@ -26,6 +26,7 @@ dataTableUI <- function(id){
 #' @param selectionPolicy character string, single, multiple or none
 #' @param pageLength  integer typically 5, 10, 25 or 50
 #' @param visibleRows  "all", "none", or a list of rownames
+#' @param selectedRows character string, reactive(NULL)  by default
 #' @param searchTerm character string, "" by default
 #' @param nowrap  logcial default TRUE
 #'
@@ -38,14 +39,23 @@ dataTableServer <- function(input, output, session,
                             tbl,
                             selectionPolicy="single",
                             pageLength=5,
-                            visibleRows,
+                            visibleRows=reactive(head(rownames(tbl))),
+                            selectedRows=reactive(NULL),
                             searchTerm=reactive(""),
                             nowrap=TRUE) {
 
     output$dataTable <- DT::renderDataTable({
-       printf("entering renderDataTable, nrow: %d", nrow(tbl))
-       visibleRowsImmediate <- visibleRows()
-       if(length(visibleRowsImmediate) > 0){
+        printf("entering renderDataTable, nrow: %d", nrow(tbl))
+        selectedRowNames <- selectedRows()
+        #selectedRowNames <- "Datsun 710"
+        printf("2")
+        printf("selectedRowNames: %s", selectedRowNames)
+        if(is.null(selectedRowNames))
+          selectedRowNames <- ""
+        printf("      selected rows: %s", paste(selectedRowNames, collapse=", "))
+        visibleRowsImmediate <- visibleRows()
+        printf("3")
+        if(length(visibleRowsImmediate) > 0){
            if(visibleRowsImmediate[1] == "all"){
                tbl.sub <- tbl
            } else if(visibleRowsImmediate[1] == "none") {
@@ -54,19 +64,29 @@ dataTableServer <- function(input, output, session,
                tbl.sub <- tbl[visibleRowsImmediate,]
            }
 
+           printf("4")
            DTclass <- ""
+           printf("5")
            if(nowrap) DTclass <- "nowrap display"
+           printf("6")
+           searchTermString <- searchTerm()
+           if(!is.null(searchTermString))
+               if(nchar(searchTermString) > 0)
+                  DTclass <- "display"
+           searchTermString <- ""
+           printf("7")
+           printf("selectedRowNames: %s", selectedRowNames)
            DT::datatable(tbl.sub,
                          rownames=TRUE,
                          class=DTclass,
                          #class='nowrap display',
                          options=list(dom='<lfip<t>>',
                                       scrollX=TRUE,
-                                      search=list(caseInsensitive=TRUE, search=searchTerm()),
+                                      search=list(caseInsensitive=TRUE, search=searchTermString),
                                       lengthMenu = c(3,5,10,50),
                                       pageLength = pageLength,
                                       paging=TRUE),
-                         selection=list(mode=selectionPolicy))
+                         selection=list(mode=selectionPolicy, selected=selectedRowNames))
 
         } # if length(visibleRowsImmediate) > 0
     })  # renderDataTable

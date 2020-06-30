@@ -11,7 +11,8 @@ dataTableServer(
   tbl,
   selectionPolicy = "single",
   pageLength = 5,
-  visibleRows,
+  visibleRows = reactive(head(rownames(tbl))),
+  selectedRows = reactive(NULL),
   searchTerm = reactive(""),
   nowrap = TRUE
 )

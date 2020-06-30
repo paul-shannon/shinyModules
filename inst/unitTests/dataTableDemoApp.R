@@ -4,20 +4,23 @@ tbl.demo <- mtcars
 fatLine <- paste(LETTERS, collapse="")
 multiFatLine <- sprintf("%s\n%s\n%s\n", fatLine, fatLine, fatLine, fatLine)
 tbl.demo$fatLine <- multiFatLine
+searchTerms <- c("RX4", "710", "4", "Sportabout")
 #----------------------------------------------------------------------------------------------------
 ui <- fluidPage(
 
+    div(selectInput("carSelector", "Select Car", c(" - ", rownames(mtcars))),
+        style="display: inline-block;vertical-align:top; width: 200px;"),
+    div(selectInput("termSearcher", "Search", c("", searchTerms)),
+        style="display: inline-block;vertical-align:top; margin-left: 20px; width: 200px;"),
     div(
-      dataTableUI("table"),
-      style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;"),
-
-    messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=40, fontSize=14),
-    selectInput("carSelector", "Car:", rownames(mtcars)),
-
+       dataTableUI("table"),
+       style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;"
+       ),
+    div(messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=40, fontSize=14),
+        style="margin-left: 100px;"),
     div(
       dataTableUI("subtable"),
       style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;")
-
     ) # fluidPage
 
 #----------------------------------------------------------------------------------------------------
@@ -39,17 +42,21 @@ server <- function(input, output, session){
 
   observeEvent(input$carSelector, ignoreInit=TRUE, {
      printf("carSelector event")
-     #tbl <- mtcars
      carName <- input$carSelector
+     if(carName == " - ")
+         carName <- NULL
      printf("%s", carName)
      callModule(dataTableServer,
-                "subtable",
+                "table",
                 tbl.demo,
                 selectionPolicy="single",
                 pageLength=10,
                 visibleRows=reactive("all"),
-                searchTerm=reactive(carName))
+                selectedRows=reactive(carName),
+                searchTerm=reactive(NULL))
      })
+
+
 
   }
 
