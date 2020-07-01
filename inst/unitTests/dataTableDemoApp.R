@@ -29,7 +29,7 @@ ui <- fluidPage(
 server <- function(input, output, session)
 {
 
-      # an initial empty selection, used by "subtable" instance
+      # some startup values, later set repsonsively
   selectedRows <- reactiveVal("none")
   wrapLongTextInCells <- TRUE
 
@@ -42,7 +42,7 @@ server <- function(input, output, session)
       # displays the selectedRows (mtcars rownames) at every selection event
   callModule(messageBoxServer, "messageBox.1", newContent=selectedRows)
 
-      # call this every time selectedRows changes
+      # update the subtable every time selectedRows changes
   callModule(dataTableServer, "subtable", tbl=tbl.demo,
              selectionPolicy=reactive("none"),
              pageLength=reactive(5),
@@ -64,17 +64,11 @@ server <- function(input, output, session)
                 wrapLongTextInCells=reactive(wrapLongTextInCells))
        } # refreshMainTable
 
-  #observeEvent(selectedRows, {
-  #   printf("selectedRows event"); # : %s", paste(selectedRows(), collapse=","))
-     #wrapLongTextInCells <- input$wrapOrNoWrap == "yes"
-     #refreshSubTable(selectedRows, wrapLongTextInCells)
-  #   })
 
       # just the carSelector value changes
   observeEvent(input$carSelector, ignoreInit=TRUE, {
      carName <- input$carSelector
      if(carName == " - ") carName <- NULL
-     #isolate(updateSelectInput(session, "termSearcher", label = NULL, choices = NULL,  selected = " - "))
      refreshMainTable(carName, searchTerm=NULL)
      })
 
@@ -82,7 +76,6 @@ server <- function(input, output, session)
   observeEvent(input$termSearcher, ignoreInit=TRUE, {
      searchTerm <- input$termSearcher
      if(searchTerm == " - ") searchTerm <- NULL
-     #isolate(updateSelectInput(session, "carSelector", label = NULL, choices = NULL,  selected = " - "))
      refreshMainTable(carName=NULL, searchTerm=searchTerm)
      })
 
