@@ -9,7 +9,7 @@ dataTableServer(
   output,
   session,
   tbl,
-  selectionPolicy = "single",
+  selectionPolicy = reactive("single"),
   pageLength = reactive(5),
   visibleRows = reactive(head(rownames(tbl))),
   selectedRows = reactive(NULL),

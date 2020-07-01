@@ -37,7 +37,7 @@ dataTableUI <- function(id){
 #'
 dataTableServer <- function(input, output, session,
                             tbl,
-                            selectionPolicy="single",
+                            selectionPolicy=reactive("single"),
                             pageLength=reactive(5),
                             visibleRows=reactive(head(rownames(tbl))),
                             selectedRows=reactive(NULL),
@@ -48,7 +48,6 @@ dataTableServer <- function(input, output, session,
 
         selectedRowNames <- selectedRows()
         searchTermString <- searchTerm()
-        printf("2")
 
              #------------------------------------------------------------
              # search mode, or row selection mode, or neither.
@@ -58,56 +57,43 @@ dataTableServer <- function(input, output, session,
         mode <- "neitherSelectionNorSearch"
         if(!is.null(selectedRowNames)){
            mode <- "selectRows"
-           printf("selectedRowNames: %s", paste(selectedRowNames, collapse=","))
+           #printf("selectedRowNames: %s", paste(selectedRowNames, collapse=","))
            }
         if(is.null(selectedRowNames)){
            if(!is.null(searchTermString))
               mode <- "search"
            }
-        printf("========= mode: %s", mode)
 
         visibleRowsImmediate <- visibleRows()
-        printf("--- visibleRowsImmediate")
-        print(visibleRowsImmediate)
 
         tbl.sub <- data.frame()   # an empty table by default
 
         if(length(visibleRowsImmediate) > 0){
            if(visibleRowsImmediate[1] == "all")
               tbl.sub <- tbl
-           #else if(visibleRowsImmediate[1] == "none")
-           #   tbl.sub <- data.frame()
            else{
-              printf("make 1 or a few rows visible");
               tbl.sub <- tbl[visibleRowsImmediate,]
               }
            } # if
 
-        printf("=== tbl.sub, number of rows: %d", nrow(tbl.sub))
-
         wrapText <- wrapLongTextInCells()
-        printf("=== wrapText?: %s", wrapText)
+        #printf("=== wrapText?: %s", wrapText)
         DTclass <- "display"
         if(!wrapText)
             DTclass <- paste0(DTclass, " nowrap")
-        printf("=== DTclass: %s", DTclass)
-
-             #------------------------------------------------------------
-             # table can be searched, or rows can be selected, but not
-             # both at the same time.
-             #------------------------------------------------------------
+        #printf("=== DTclass: %s", DTclass)
 
         selectionOption <- list()
         searchOption <- list()
 
         if(mode == "selectRows")
-           selectionOption <- list(mode=selectionPolicy, selected=selectedRowNames)
+           selectionOption <- list(mode=selectionPolicy(), selected=selectedRowNames)
         if(mode == "search")
            searchOption <- list(caseInsensitive=TRUE, search=searchTermString)
 
         DT::datatable(tbl.sub,
                       rownames=TRUE,
-                      class='', #DTclass,
+                      class=DTclass,
                       options=list(dom='<lfip<t>>',
                                    scrollX=TRUE,
                                    search=searchOption,
