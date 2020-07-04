@@ -14,7 +14,7 @@ dataTableServer(
   visibleRows = reactive(head(rownames(tbl))),
   selectedRows = reactive(NULL),
   searchTerm = reactive(NULL),
-  wrapLongTextInCells = reactive(TRUE)
+  wrapLongTextInCells = reactive(FALSE)
 )
 }
 \arguments{
