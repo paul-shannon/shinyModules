@@ -7,7 +7,7 @@ Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Depends: R (>= 3.5.0), shiny, igvShiny
 Imports: DT
-Description:  a well-behaved module form of a DataTable widget
+Description: a well-behaved module form of a DataTable widget
 License: MIT
 LazyLoad: yesx
 Collate:
@@ -16,7 +16,9 @@ Collate:
    'messageBoxModule.R'
    'iframeSearchModule.R'
    'commentsModule.R'
+   'commentsWithBrowseModule.R'
    'ggAnalyteLinePlotModule.R'
+   'ExperimentalMeasuresModule.R'
 NeedsCompilation: no
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
