@@ -4,16 +4,16 @@
 \alias{ExperimentalMeasuresServer}
 \title{the server for a ExperimentalMesures shiny module}
 \usage{
-ExperimentalMeasuresServer(input, output, session, tbl)
+ExperimentalMeasuresServer(id, tbl)
 }
 \arguments{
+\item{tbl, }{a data.frame}
+
 \item{input}{enviroment provide by shiny}
 
 \item{output}{enviroment provide by shiny}
 
 \item{session}{enviroment provide by shiny}
-
-\item{tbl, }{a data.frame}
 }
 \description{
 the server for a ExperimentalMesures shiny module

@@ -5,7 +5,8 @@ library(shinyModules)
 #   https://roh.engineering/post/shiny-add-removing-modules-dynamically/   # linear models for mtcars mpg
 #   https://www.ardata.fr/en/post/2019/07/01/dynamic-module-call/
 #   https://mastering-shiny.org/scaling-modules.html
-#
+# see 2018 very similar module/shiny app:
+#    https://www.blog.cultureofinsight.com/2018/01/reproducible-shiny-app-development-with-modules/
 #------------------------------------------------------------------------------------------------------------------------
 tbl <- get(load(system.file(package="shinyModules", "extdata",
                             "proteomicsExperimentSubsetDataFrame.RData")))
@@ -65,36 +66,26 @@ server <- function(input, output, session)
 #----------------------------------------------------------------------------------------------------
 displayAnalyteDataByExperiment <- function(analyte.name)
 {
-   coi <- c("experiment", "time", "radiation", "area", "sd")
-   tbl.sub <- subset(tbl, analyte==analyte.name) #  & groupName==exoi.01)[, coi]
+   tbl.sub <- subset(tbl, analyte==analyte.name) # [, coi] #  & groupName==exoi.01)[, coi]
    experiment.groups <- sort(unique(tbl.sub$groupName))
    printf("--- experiment groups: %d", length(experiment.groups))
    print(experiment.groups)
 
-   experiment.groups <- c("DMSO", "ATMi")
-
-   for(experiment.name in experiment.groups[1:2]){
-     tbl.exp <- subset(tbl.sub, groupName==experiment.name)
+   for(experiment.name in experiment.groups){
+     coi <- c("time", "radiation", "area", "sd")
+     tbl.exp <- subset(tbl.sub, groupName==experiment.name)[, coi]
+     tbl.exp
      box.title <- sprintf("%s: %s", analyte.name, experiment.name)
      box.id <- sprintf("%s-%s", analyte.name, experiment.name)
-     printf("========= subsetting on experiment: '%s'   box.id: %s", experiment.name, box.id)
-     printf("tbl subsetted by analyte and experiment group name, nrow: %d", nrow(tbl.exp))
-     printf("box.title: %s", box.title)
-     printf("box.id:    %s", box.id)
+     #printf("========= subsetting on experiment: '%s'   box.id: %s", experiment.name, box.id)
+     #printf("tbl subsetted by analyte and experiment group name, nrow: %d", nrow(tbl.exp))
+     #printf("box.title: %s", box.title)
+     #printf("box.id:    %s", box.id)
      insertUI("#plotBoxDiv", "beforeEnd",
               box(ExperimentalMeasuresUI(id=box.id, title=box.title), width=4, solidHeader=TRUE))
-     printf("dim(tbl.exp): %d, %d", nrow(tbl.exp), ncol(tbl.exp))
-     callModule(ExperimentalMeasuresServer, box.id, tbl.exp)
+     #printf("dim(tbl.exp): %d, %d", nrow(tbl.exp), ncol(tbl.exp))
+     ExperimentalMeasuresServer(id=box.id, tbl=tbl.exp)
      }
-#   coi <- c("experiment", "time", "radiation", "area", "sd")
-#
-#   tbl.sub <- subset(tbl, analyte==analyte.name)
-#   experiments <- unique(tbl.sub$groupName)
-#
-#   for(experiment in experiments){
-#      tbl.exp <- subset(tbl.sub, groupName==experiment)[, coi]
-#      callModule(ExperimentalMeasuresServer, experiment, tbl.exp)
-#      }
 
 } # displayAnalyteDataByExperiment
 #----------------------------------------------------------------------------------------------------

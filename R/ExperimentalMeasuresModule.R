@@ -18,11 +18,13 @@
 ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontSize=20, backgroundColor="beige"){
 
    tabsetPanel(id=NS(id, "tabset"), type = "tabs",
-               tabPanel("Table",
-                        DT::DTOutput(NS(id, "dataTable")),
-                        style = "height:500px; overflow-y: scroll;overflow-x: scroll;"),
                tabPanel("Plot",
-                        plotOutput(NS(id, "barplot")))
+                        plotOutput(NS(id, "barplot"))),
+               tabPanel("Table",
+                        tableOutput(NS(id, "dataTable"))),
+                        #DT::DTOutput(NS(id, "dataTable")),
+                        #style = "height:500px; overflow-y: scroll;overflow-x: scroll;"),
+               selected="Plot"
     )
 }
 #----------------------------------------------------------------------------------------------------
@@ -38,21 +40,21 @@ ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontS
 #'
 #' @export
 #'
-ExperimentalMeasuresServer <- function(input, output, session, tbl)
-{
-   printf("--- executing ExperimentalMeasuresServer")
-   output$dataTable <- DT::renderDataTable({
-      DT::datatable(tbl, rownames=FALSE)
-      })
+ExperimentalMeasuresServer <- function(id, tbl) {
 
-   output$barplot <- renderPlot({
-      tbl$x.axis.value <- seq_len(nrow(tbl))
-      print(tbl)
-      print(tbl$x.axis.value)
-      ggplot(data=tbl, aes(x=x.axis.value, y=area)) + geom_bar(stat='identity') + ylim(0,5)
-      })
+    moduleServer(id, function(input, output, session){
+        printf("--- executing ExperimentalMeasuresServer, id: %s", id)
+        doNotKnowWhyThisIsNeeded <- tbl
+        #output$dataTable <- DT::renderDataTable({DT::datatable(tbl, rownames=FALSE)
+        output$dataTable <- renderTable(tbl)
 
-} # ExperimentalMeasuresServer
+        output$barplot <- renderPlot({
+            tbl$x.axis.value <- seq_len(nrow(tbl))
+            ggplot(data=tbl, aes(x=x.axis.value, y=area)) + geom_bar(stat='identity') + ylim(0,5)
+            })
+        }) # moduleServer
+
+    } # ExperimentalMeasuresServer
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))
 
