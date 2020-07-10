@@ -17,10 +17,12 @@
 #'
 ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontSize=20, backgroundColor="beige"){
 
-   tabsetPanel(type = "tabs",
-               tabPanel("Table", DT::DTOutput(NS(id, "dataTable")),
+   tabsetPanel(id=NS(id, "tabset"), type = "tabs",
+               tabPanel("Table",
+                        DT::DTOutput(NS(id, "dataTable")),
                         style = "height:500px; overflow-y: scroll;overflow-x: scroll;"),
-               tabPanel("Plot", plotOutput(NS(id, "barplot")))
+               tabPanel("Plot",
+                        plotOutput(NS(id, "barplot")))
     )
 }
 #----------------------------------------------------------------------------------------------------
