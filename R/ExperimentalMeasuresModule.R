@@ -19,11 +19,10 @@ ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontS
 
    tabsetPanel(id=NS(id, "tabset"), type = "tabs",
                tabPanel("Plot",
-                        plotOutput(NS(id, "barplot"))),
+                        plotOutput(NS(id, "barplot"), height=boxHeight)),
                tabPanel("Table",
-                        tableOutput(NS(id, "dataTable"))),
-                        #DT::DTOutput(NS(id, "dataTable")),
-                        #style = "height:500px; overflow-y: scroll;overflow-x: scroll;"),
+                        tableOutput(NS(id, "dataTable")),
+                        style = sprintf("height:%dpx; overflow-y: scroll;overflow-x: scroll;", boxHeight)),
                selected="Plot"
     )
 }
