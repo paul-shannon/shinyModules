@@ -16,8 +16,9 @@ tbl.sub.02 <- subset(tbl, analyte==aoi.01 & groupName==exoi.02)[, coi]
 #--------------------------------------------------------------------------------------------------------------
 ui <- fluidPage(
 
-    div(ExperimentalMeasuresUI(id="expMeasures.01", title="CDC25B_pS160_LLGH"),
-       style="width: 600px; margin: 20px; padding: 10px; border: 1px solid gray; border-radius: 10px;"
+    div(ExperimentalMeasuresUI(id="expMeasures.01", title="CDC25B_pS160_LLGH",
+                               boxHeight=220, boxWidth=360),
+       style="width: 380px;  margin: 20px; padding: 10px; border: 1px solid gray; border-radius: 10px;"
        )
 )
 #----------------------------------------------------------------------------------------------------

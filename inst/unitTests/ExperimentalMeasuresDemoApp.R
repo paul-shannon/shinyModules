@@ -33,20 +33,13 @@ ui.dashboard <- dashboardPage(
   dashboardHeader(title = "Proteomic Assays"),
   dashboardSidebar(
       selectInput("selectAnalyte",
-                  label="Analyte",
-                  c("CDC25B_pS160_LLGH", "LMNB1_pS23_AGGP", "MDM2_pS166_AISE", "TP53_pS315_ALPN")
+                  label="Choose Analyte",
+                  c(" - ", "CDC25B_pS160_LLGH", "LMNB1_pS23_AGGP", "MDM2_pS166_AISE", "TP53_pS315_ALPN")
                   ),
     sidebarMenuOutput("menu")
     ),
   dashboardBody(
-      uiOutput("plotBoxDiv")  # creates a div to be filled later
-
-      #fluidRow(
-          #box(ExperimentalMeasuresUI(id="expMeasures.01", title=sprintf("%s: %s", aoi.01, exoi.01)),
-          #    title=sprintf("%s - %s", aoi.01, exoi.01)),
-          #box(ExperimentalMeasuresUI(id="expMeasures.02", title=sprintf("%s: %s", aoi.01, exoi.02)),
-          #    title=sprintf("%s - %s", aoi.01, exoi.02))
-       #  )
+    fluidRow(uiOutput("plotBoxDiv"))  # creates a div to be filled later
     )
 
 ) # ui.dashboard
@@ -55,12 +48,11 @@ server <- function(input, output, session)
 {
     observeEvent(input$selectAnalyte, ignoreInit=TRUE,{
        analyte <- input$selectAnalyte;
-       printf("new analyte: %s", analyte)
-       displayAnalyteDataByExperiment(analyte)
+       if(analyte != " - "){
+          printf("new analyte: %s", analyte)
+          displayAnalyteDataByExperiment(analyte)
+          }
        })
-
-  #callModule(ExperimentalMeasuresServer, "expMeasures.01", tbl.sub.01)
-  #callModule(ExperimentalMeasuresServer, "expMeasures.02", tbl.sub.02)
 
 } # server
 #----------------------------------------------------------------------------------------------------
@@ -71,19 +63,20 @@ displayAnalyteDataByExperiment <- function(analyte.name)
    printf("--- experiment groups: %d", length(experiment.groups))
    print(experiment.groups)
 
+   removeUI("#temporaryDiv")
+
    for(experiment.name in experiment.groups){
      coi <- c("time", "radiation", "area", "sd")
      tbl.exp <- subset(tbl.sub, groupName==experiment.name)[, coi]
      tbl.exp
      box.title <- sprintf("%s: %s", analyte.name, experiment.name)
      box.id <- sprintf("%s-%s", analyte.name, experiment.name)
-     #printf("========= subsetting on experiment: '%s'   box.id: %s", experiment.name, box.id)
-     #printf("tbl subsetted by analyte and experiment group name, nrow: %d", nrow(tbl.exp))
-     #printf("box.title: %s", box.title)
-     #printf("box.id:    %s", box.id)
-     insertUI("#plotBoxDiv", "beforeEnd",
-              box(ExperimentalMeasuresUI(id=box.id, title=box.title), width=4, solidHeader=TRUE))
-     #printf("dim(tbl.exp): %d, %d", nrow(tbl.exp), ncol(tbl.exp))
+     insertUI("#plotBoxDiv", "beforeEnd", div(id="temporaryDiv"))
+     insertUI("#temporaryDiv", "beforeEnd",
+              box(ExperimentalMeasuresUI(id=box.id, title=box.title),
+                  title=box.title, #experiment.name,
+                  width=4,
+                  solidHeader=TRUE))
      ExperimentalMeasuresServer(id=box.id, tbl=tbl.exp)
      }
 

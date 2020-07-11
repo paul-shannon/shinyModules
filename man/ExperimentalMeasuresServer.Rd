@@ -7,13 +7,9 @@
 ExperimentalMeasuresServer(id, tbl)
 }
 \arguments{
+\item{id}{html element identifier}
+
 \item{tbl, }{a data.frame}
-
-\item{input}{enviroment provide by shiny}
-
-\item{output}{enviroment provide by shiny}
-
-\item{session}{enviroment provide by shiny}
 }
 \description{
 the server for a ExperimentalMesures shiny module

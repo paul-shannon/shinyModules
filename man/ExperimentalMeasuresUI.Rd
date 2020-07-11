@@ -7,8 +7,8 @@
 ExperimentalMeasuresUI(
   id,
   title,
-  boxWidth = 300,
   boxHeight = 300,
+  boxWidth = 320,
   fontSize = 20,
   backgroundColor = "beige"
 )
@@ -18,9 +18,9 @@ ExperimentalMeasuresUI(
 
 \item{title}{character string, title for the box}
 
-\item{boxWidth}{integer pixels, 200 by default}
-
 \item{boxHeight}{integer pixels, 30 by default}
+
+\item{boxWidth}{integer pixels, 200 by default}
 
 \item{fontSize}{integer pixels, 20 by default}
 

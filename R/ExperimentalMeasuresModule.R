@@ -15,23 +15,22 @@
 #'
 #' @export
 #'
-ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontSize=20, backgroundColor="beige"){
+ExperimentalMeasuresUI <- function(id, title, boxHeight=300, boxWidth=320, fontSize=20, backgroundColor="beige"){
 
    tabsetPanel(id=NS(id, "tabset"), type = "tabs",
                tabPanel("Plot",
-                        plotOutput(NS(id, "barplot"), height=boxHeight)),
+                        plotOutput(NS(id, "barplot"), height=boxHeight, width=boxWidth)),
                tabPanel("Table",
                         tableOutput(NS(id, "dataTable")),
-                        style = sprintf("height:%dpx; overflow-y: scroll;overflow-x: scroll;", boxHeight)),
+                        style = sprintf("height:%dpx; width: %dpx; overflow-y: scroll;overflow-x: scroll;",
+                                        boxHeight, boxWidth)),
                selected="Plot"
     )
 }
 #----------------------------------------------------------------------------------------------------
 #' the server for a ExperimentalMesures shiny module
 #'
-#' @param input enviroment provide by shiny
-#' @param output enviroment provide by shiny
-#' @param session enviroment provide by shiny
+#' @param id html element identifier
 #' @param tbl, a data.frame
 #'
 #' @aliases ExperimentalMeasuresServer
@@ -42,9 +41,8 @@ ExperimentalMeasuresUI <- function(id, title, boxWidth=300, boxHeight=300, fontS
 ExperimentalMeasuresServer <- function(id, tbl) {
 
     moduleServer(id, function(input, output, session){
-        printf("--- executing ExperimentalMeasuresServer, id: %s", id)
-        doNotKnowWhyThisIsNeeded <- tbl
-        #output$dataTable <- DT::renderDataTable({DT::datatable(tbl, rownames=FALSE)
+        # printf("--- executing ExperimentalMeasuresServer, id: %s", id)
+        doNotKnowWhyThisIsNeeded <- tbl    # a bug in the new shiny 1.5.0? (11 jul 2020)
         output$dataTable <- renderTable(tbl)
 
         output$barplot <- renderPlot({
