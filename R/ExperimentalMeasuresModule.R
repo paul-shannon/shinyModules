@@ -45,9 +45,14 @@ ExperimentalMeasuresServer <- function(id, tbl) {
         doNotKnowWhyThisIsNeeded <- tbl    # a bug in the new shiny 1.5.0? (11 jul 2020)
         output$dataTable <- renderTable(tbl)
 
+        yMax <- max(tbl$area) * 1.1
+        printf("EMM.R, yMax: %f", yMax)
+        if (yMax < 6)
+           yMax <- 6
+
         output$barplot <- renderPlot({
             tbl$x.axis.value <- seq_len(nrow(tbl))
-            ggplot(data=tbl, aes(x=x.axis.value, y=area)) + geom_bar(stat='identity') + ylim(0,5)
+            ggplot(data=tbl, aes(x=x.axis.value, y=area)) + geom_bar(stat='identity') + ylim(0, yMax) + xlab("time or condition")
             })
         }) # moduleServer
 

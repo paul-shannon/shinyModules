@@ -20,14 +20,6 @@ exoi.02 <- "ATRi -/+"
 tbl.sub.02 <- subset(tbl, analyte==aoi.01 & groupName==exoi.02)[, coi]
 
 #----------------------------------------------------------------------------------------------------
-ui.simple <- fluidPage(
-
-    div(ExperimentalMeasuresUI(id="expMeasures.01", title="CDC25B_pS160_LLGH"),
-       style="width: 600px; margin: 20px; padding: 10px; border: 1px solid gray; border-radius: 10px;"
-       )
-
-) # ui.simple
-#----------------------------------------------------------------------------------------------------
 ui.dashboard <- dashboardPage(
 
   dashboardHeader(title = "Proteomic Assays"),
@@ -66,15 +58,15 @@ displayAnalyteDataByExperiment <- function(analyte.name)
    removeUI("#temporaryDiv")
 
    for(experiment.name in experiment.groups){
-     coi <- c("time", "radiation", "area", "sd")
+     coi <- c("time", "experiment", "radiation", "area", "sd")
      tbl.exp <- subset(tbl.sub, groupName==experiment.name)[, coi]
      tbl.exp
      box.title <- sprintf("%s: %s", analyte.name, experiment.name)
      box.id <- sprintf("%s-%s", analyte.name, experiment.name)
      insertUI("#plotBoxDiv", "beforeEnd", div(id="temporaryDiv"))
      insertUI("#temporaryDiv", "beforeEnd",
-              box(ExperimentalMeasuresUI(id=box.id, title=box.title),
-                  title=box.title, #experiment.name,
+              box(ExperimentalMeasuresUI(id=box.id, title=box.title, boxWidth=400),
+                  title=box.title,
                   width=4,
                   solidHeader=TRUE))
      ExperimentalMeasuresServer(id=box.id, tbl=tbl.exp)
