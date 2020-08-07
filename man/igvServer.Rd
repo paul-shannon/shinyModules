@@ -10,6 +10,8 @@ igvServer(
   session,
   genome,
   locus,
+  width = 800,
+  height = 800,
   geneModelDisplayMode = "COLLAPSED",
   geneModelTrackHeight = 200
 )

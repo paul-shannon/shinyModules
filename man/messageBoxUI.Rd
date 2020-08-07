@@ -10,6 +10,7 @@ messageBoxUI(
   boxWidth = 200,
   boxHeight = 30,
   fontSize = 20,
+  fontColor = "black",
   backgroundColor = "beige"
 )
 }
@@ -23,6 +24,8 @@ messageBoxUI(
 \item{boxHeight}{integer pixels, 30 by default}
 
 \item{fontSize}{integer pixels, 20 by default}
+
+\item{fontColor}{character string, uses standard CSS naming conventions, "black" by default}
 
 \item{backgroundColor}{character string, uses standard CSS naming conventions, "beige" by default}
 }

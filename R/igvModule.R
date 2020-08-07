@@ -37,6 +37,8 @@ igvUI <- function(id){
 igvServer <- function(input, output, session,
                       genome,
                       locus,
+                      width=800,
+                      height=800,
                       geneModelDisplayMode="COLLAPSED",
                       geneModelTrackHeight=200) {
 
@@ -61,6 +63,8 @@ igvServer <- function(input, output, session,
        igvShiny(list(
           genomeName=genome,
           initialLocus=locus,
+          width=width,
+          height=height,
           displayMode=geneModelDisplayMode,
           trackHeight=geneModelTrackHeight
           ))
