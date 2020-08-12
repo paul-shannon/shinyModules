@@ -1,8 +1,8 @@
 Package: shinyModules
 Type: Package
 Title: useful shiny modules
-Version: 1.0.14
-Date: 2020-08-07
+Version: 1.0.15
+Date: 2020-08-12
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Depends: R (>= 3.5.0), shiny, igvShiny
