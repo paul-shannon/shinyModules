@@ -34,9 +34,13 @@ iframeSearchUI <- function(id, title){
 #'
 iframeSearchServer <- function(input, output, session, website, geneSymbol){
 
+  printf("--- starting iframeSearchServer")
+
   output$iframe <- renderUI({
      goi <- geneSymbol()
      woi <- tolower(website())
+     print(goi)
+     print(woi)
      url <- switch(woi,
              "genecards"  = "https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s",
              "pubmed"     = "https://pubmed.ncbi.nlm.nih.gov/?term=%s",
@@ -48,11 +52,18 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "google"     = "https://www.google.com/search?q=%s",
              "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search",
              "clinvar"    = "https://www.ncbi.nlm.nih.gov/clinvar/?term=%s[gene]",
-             "comments"   = "https://docs.google.com/document/d/e/2PACX-1vRJqN1rnkywno3WeiV16-gVF50KlIR81Xztbl7ZDtqaqVqtWEzckdXFppb2N-kWgEGupnzmY8tY_cSt/pub?embedded=true")
+             "wiki"       = "http://localhost:3000/%s")
 
      uri <- sprintf(url, goi)
-     htmlText <- tags$iframe(src=uri, is="x-frame-bypass", height=1000, width="100%")
-     htmlText
+     if(woi == "wiki"){
+        browseURL(uri)
+        return("")
+        }
+     else{
+        printf("uri for iframe: %s", uri)
+        htmlText <- tags$iframe(src=uri, is="x-frame-bypass", height=1000, width="100%")
+        htmlText
+        }
      })
 
 } # iframeServer
