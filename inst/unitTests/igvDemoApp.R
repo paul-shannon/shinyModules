@@ -15,7 +15,7 @@ ui <- fluidPage(
        style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
    #actionButton("searchButton", "Search"),
    actionButton("addSnpTrackButton", "Add SNP Track"),
-   actionButton("addGWASTrackButton", "Add Deelan99 GWAS"),
+   actionButton("addGWASTrackButton", "Add Deelen99 GWAS"),
    actionButton("addConservationTrackButton", "Add Conservation Track"),
    #actionButton("getChromLoc", "Get Region"),
    messageBoxUI(id="messageBox.igv", title="igv selection", boxWidth= 600),
@@ -82,7 +82,7 @@ server <- function(input, output, session){
    observeEvent(input$addGWASTrackButton, {
       tbl.bed <- tbl.snps[, c("chrom", "start", "end")]
       tbl.bed$name <- rownames(tbl.snps)
-      loadGwasTrack(session, "Deelan99", tbl.gwas)
+      loadGwasTrack(session, "Deelen99", tbl.gwas)
       })
 
    observeEvent(input$addConservationTrackButton, {
