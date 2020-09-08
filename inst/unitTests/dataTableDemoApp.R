@@ -44,7 +44,8 @@ server <- function(input, output, session)
 
       # update the subtable every time selectedRows changes
   callModule(dataTableServer, "subtable", tbl=tbl.demo,
-             selectionPolicy=reactive("none"),
+             selectionPolicy=reactive("single"),
+             #selectionPolicy=reactive("none"),
              pageLength=reactive(5),
              visibleRows=selectedRows,
              wrapLongTextInCells=reactive(input$wrapOrNoWrap == "yes"))

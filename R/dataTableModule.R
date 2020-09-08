@@ -77,11 +77,9 @@ dataTableServer <- function(input, output, session,
            } # if
 
         wrapText <- wrapLongTextInCells()
-        #printf("=== wrapText?: %s", wrapText)
         DTclass <- "display"
         if(!wrapText)
             DTclass <- paste0(DTclass, " nowrap")
-        #printf("=== DTclass: %s", DTclass)
 
         selectionOption <- list()
         searchOption <- list()

@@ -42,6 +42,7 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
      print(goi)
      print(woi)
      url <- switch(woi,
+             "ucsc"       = "http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=chr1:35000-40000",
              "genecards"  = "https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s",
              "pubmed"     = "https://pubmed.ncbi.nlm.nih.gov/?term=%s",
              "homologene" = "https://www.ncbi.nlm.nih.gov/homologene/?term=%s",
@@ -55,7 +56,7 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "wiki"       = "http://localhost:3000/%s")
 
      uri <- sprintf(url, goi)
-     if(woi == "wiki"){
+     if(woi %in% c("wiki", "ucsc")){
         browseURL(uri)
         return("")
         }

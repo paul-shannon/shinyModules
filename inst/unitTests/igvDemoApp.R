@@ -2,20 +2,25 @@ library(shinyModules)
 library(GenomicRanges)
 library(rtracklayer)
 #--------------------------------------------------------------------------------------------------------------
+addResourcePath("tracks", "tracks")
+addResourcePath("www", "www")
+#--------------------------------------------------------------------------------------------------------------
 file <- system.file(package="shinyModules", "extdata", "threeSnps.tsv")
 tbl.snps <- read.table(file, header=TRUE, sep="\t", as.is=TRUE, row.names=1)
-
+tbl.gwas <- get(load("~/github/lcApps/gwas/danEvans/incoming/tbl.99.hg38.05.RData"))
+tbl.gwas$name <- tbl.gwas$SNPS  # put the rsid into a column with a standard name
 
 ui <- fluidPage(
    div(igvUI("igv"),
-       style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
+       style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
    #actionButton("searchButton", "Search"),
    actionButton("addSnpTrackButton", "Add SNP Track"),
+   actionButton("addGWASTrackButton", "Add Deelan99 GWAS"),
    actionButton("addConservationTrackButton", "Add Conservation Track"),
    #actionButton("getChromLoc", "Get Region"),
    messageBoxUI(id="messageBox.igv", title="igv selection", boxWidth= 600),
    div(dataTableUI("snpDataTable"),
-          style="margin: 10px; margin-bottom: 30px; padding: 10px; border: 3px solid black; border-radius: 10px;"),
+          style="margin: 10px; margin-bottom: 30px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
    messageBoxUI(id="messageBox.snpTable", title="snps", boxWidth=600)
    )
 #--------------------------------------------------------------------------------------------------------------
@@ -34,9 +39,23 @@ server <- function(input, output, session){
    selectedEntity <- callModule(igvServer, "igv",
                                 genome="hg38",
                                 geneModelDisplayMode="COLLAPSED",
-                                locus="APOE")
+                                locus="APOE",
+                                height=1000)
 
    callModule(messageBoxServer, "messageBox.igv", newContent=selectedEntity)
+
+    observe({
+        x <- selectedEntity()
+        printf("selectedEntity: %s", x)
+        if(x %in% tbl.gwas$name){
+            printf("found %s in tbl.gwas$name", x)
+            tbl.info <- as.data.frame(t(subset(tbl.gwas, name==x)))
+            colnames(tbl.info) <- NULL
+            showModal(modalDialog(renderTable(tbl.info, rownames=TRUE),
+                                  size="l", title=x, easyClose=TRUE))
+            print(tbl.info)
+            }
+        })
 
    observe({
       rsids <- roi()
@@ -58,6 +77,12 @@ server <- function(input, output, session){
       tbl.bed <- tbl.snps[, c("chrom", "start", "end")]
       tbl.bed$name <- rownames(tbl.snps)
       loadBedTrack(session, "snps", tbl.bed, color="red");
+      })
+
+   observeEvent(input$addGWASTrackButton, {
+      tbl.bed <- tbl.snps[, c("chrom", "start", "end")]
+      tbl.bed$name <- rownames(tbl.snps)
+      loadGwasTrack(session, "Deelan99", tbl.gwas)
       })
 
    observeEvent(input$addConservationTrackButton, {
