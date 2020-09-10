@@ -4,29 +4,20 @@
 \alias{dataTableServer}
 \title{the server for a DataTable shiny module}
 \usage{
-dataTableServer(
-  input,
-  output,
-  session,
-  tbl,
-  selectionPolicy = reactive("single"),
-  pageLength = reactive(5),
-  visibleRows = reactive(head(rownames(tbl))),
-  selectedRows = reactive(NULL),
-  searchTerm = reactive(NULL),
-  wrapLongTextInCells = reactive(FALSE)
-)
+dataTableServer(id, input, output, session, tbl, selectionPolicy)
 }
 \arguments{
-\item{input}{enviroment provide by shiny}
+\item{input}{enviroment provided by shiny}
 
-\item{output}{enviroment provide by shiny}
+\item{output}{enviroment provided by shiny}
 
-\item{session}{enviroment provide by shiny}
+\item{session}{enviroment provided by shiny}
 
 \item{tbl}{data.frame}
 
 \item{selectionPolicy}{character string, single, multiple or none}
+
+\item{selectionMechanism}{character string, manual or programmatic}
 
 \item{pageLength}{integer typically 5, 10, 25 or 50}
 

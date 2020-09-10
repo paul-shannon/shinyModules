@@ -19,10 +19,11 @@ dataTableUI <- function(id){
 #----------------------------------------------------------------------------------------------------
 #' the server for a DataTable shiny module
 #'
-#' @param input enviroment provide by shiny
-#' @param output enviroment provide by shiny
-#' @param session enviroment provide by shiny
+#' @param input enviroment provided by shiny
+#' @param output enviroment provided by shiny
+#' @param session enviroment provided by shiny
 #' @param tbl data.frame
+#' @param selectionMechanism character string, manual or programmatic
 #' @param selectionPolicy character string, single, multiple or none
 #' @param pageLength  integer typically 5, 10, 25 or 50
 #' @param visibleRows  "all", "none", or a list of rownames
@@ -35,8 +36,63 @@ dataTableUI <- function(id){
 #'
 #' @export
 #'
-dataTableServer <- function(input, output, session,
+dataTableServer <- function(id, input, output, session, tbl, selectionPolicy) {
+
+    moduleServer(id,  function(input, output, session) {
+
+    output$dataTable <- DT::renderDataTable({
+        tbl.sub <- tbl
+        DTclass <- "display"
+
+        selectionOption <- list(mode=selectionPolicy(), selected=NULL)
+        printf("---------- selectionOption")
+        print(selectionOption)
+        searchOption <- list() # list(caseInsensitive=TRUE, search=searchTermString)
+
+        DT::datatable(tbl.sub,
+                      rownames=TRUE,
+                      class="display nowrap",
+                      options=list(dom='<lfip<t>>',
+                                   scrollX=TRUE,
+                                   search=searchOption,
+                                   lengthMenu = c(3,5,10,50),
+                                   pageLength = 5,
+                                   paging=TRUE),
+                      selection=selectionOption)
+        # } # if length(visibleRowsImmediate) > 0
+    })  # renderDataTable
+
+  tableSelection <- reactive({
+     rownames(tbl)[input$dataTable_rows_selected]
+     })
+
+  return(tableSelection)
+  }) # dataTableServer
+
+} # dataTableServer
+#----------------------------------------------------------------------------------------------------
+#' the server for a DataTable shiny module
+#'
+#' @param input enviroment provided by shiny
+#' @param output enviroment provided by shiny
+#' @param session enviroment provided by shiny
+#' @param tbl data.frame
+#' @param selectionMechanism character string, manual or programmatic
+#' @param selectionPolicy character string, single, multiple or none
+#' @param pageLength  integer typically 5, 10, 25 or 50
+#' @param visibleRows  "all", "none", or a list of rownames
+#' @param selectedRows character string, reactive(NULL)  by default
+#' @param searchTerm character string, "" by default
+#' @param wrapLongTextInCells  logcial default TRUE
+#'
+#' @aliases dataTableServer.old
+#' @rdname dataTableServer.old
+#'
+#' @export
+#'
+dataTableServer.old <- function(input, output, session,
                             tbl,
+                            selectionMechanism=reactive("manual"),
                             selectionPolicy=reactive("single"),
                             pageLength=reactive(5),
                             visibleRows=reactive(head(rownames(tbl))),
@@ -81,14 +137,20 @@ dataTableServer <- function(input, output, session,
         if(!wrapText)
             DTclass <- paste0(DTclass, " nowrap")
 
-        selectionOption <- list()
+        selection.mechanism <- selectionMechanism()
+        selection.policy <- selectionPolicy # ()
+
+        selectionOption <- list(mode=selection.policy)
         searchOption <- list()
 
-        if(mode == "selectRows")
-           selectionOption <- list(mode=selectionPolicy(), selected=selectedRowNames)
+
+        #if(mode == "selectRows")
+        #   selectionOption <- list(mode=selectionPolicy(), selected=selectedRowNames)
         if(mode == "search")
            searchOption <- list(caseInsensitive=TRUE, search=searchTermString)
 
+        printf("---------- selectionOption")
+        print(selectionOption)
         DT::datatable(tbl.sub,
                       rownames=TRUE,
                       class=DTclass,
@@ -108,6 +170,6 @@ dataTableServer <- function(input, output, session,
 
   return(tableSelection)
 
-} # dataTableServer
+} # dataTableServer.old
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))

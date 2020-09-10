@@ -52,7 +52,7 @@ server <- function(input, output, session){
             tbl.info <- as.data.frame(t(subset(tbl.gwas, name==x)))
             colnames(tbl.info) <- NULL
             showModal(modalDialog(renderTable(tbl.info, rownames=TRUE),
-                                  size="l", title=x, easyClose=TRUE))
+                                  size="s", title=x, easyClose=TRUE))
             print(tbl.info)
             }
         })

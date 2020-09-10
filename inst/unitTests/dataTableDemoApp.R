@@ -14,8 +14,10 @@ ui <- fluidPage(
         style="display: inline-block;vertical-align:top; margin-left: 20px; width: 200px;"),
     div(radioButtons("wrapOrNoWrap", "Wrap text in rows", choices=c("yes", "no")),
         style="display: inline-block;vertical-align:top; margin-left: 20px; width: 200px;"),
+    div(radioButtons("rowSelectionPolicy", "Selection Policy", choices=c("none", "single", "multiple")),
+        style="display: inline-block;vertical-align:top; margin-left: 20px; width: 200px;"),
     div(
-       dataTableUI("table"),
+       dataTableUI("mainTable"),
        style="margin: 20px; padding: 10px; border: 2px solid black; border-radius: 10px;"
        ),
     div(messageBoxUI(id="messageBox.1", title="", boxWidth=800, boxHeight=35, fontSize=20),
@@ -28,13 +30,15 @@ ui <- fluidPage(
 #----------------------------------------------------------------------------------------------------
 server <- function(input, output, session)
 {
-
       # some startup values, later set repsonsively
   selectedRows <- reactiveVal("none")
-  wrapLongTextInCells <- TRUE
+  selectionPolicy <- reactiveVal("single")
+  wrapLongTextInCells <- reactiveVal(TRUE)
+  selectedCar <- reactiveVal(NULL)
+  searchTargetCar <- reactiveVal(NULL)
 
-      # dynamically updated whenever a selection is made in the "table" instance
-  selectedRows <- callModule(dataTableServer, "table", tbl=tbl.demo,
+      # dynamically updated whenever a selection is made in the "mainTable" instance
+  selectedRows <- callModule(dataTableServer, "mainTable", tbl=tbl.demo,
                              selectionPolicy=reactive("multiple"),
                              pageLength=reactive(5),
                              visibleRows=reactive("all"))
@@ -44,7 +48,7 @@ server <- function(input, output, session)
 
       # update the subtable every time selectedRows changes
   callModule(dataTableServer, "subtable", tbl=tbl.demo,
-             selectionPolicy=reactive("single"),
+             selectionPolicy=input$rowSelectionPolicy, # reactive("single"),
              #selectionPolicy=reactive("none"),
              pageLength=reactive(5),
              visibleRows=selectedRows,
@@ -54,10 +58,12 @@ server <- function(input, output, session)
       # select and search are orthogonal, only one or the other happens
   refreshMainTable <- function(carName, searchTerm){
      wrapLongTextInCells <- input$wrapOrNoWrap == "yes"
+     selection.policy <- input$rowSelectionPolicy
      callModule(dataTableServer,
                 "table",
                 tbl.demo,
-                selectionPolicy=reactive("multiple"),
+                #selectionPolicy=reactive("multiple"),
+                selectionPolicy=reactive(selection.policy),
                 pageLength=reactive(5),
                 visibleRows=reactive("all"),
                 selectedRows=reactive(carName),

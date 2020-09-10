@@ -2,6 +2,8 @@
 #' the UI for a shiny module to display (in an iframe) a search of a 3rd party website (pubmed, google, ...)
 #'
 #' @import shiny
+#' @import httr
+#' @import jsonlite
 #'
 #' @param id  the html document's widget id
 #'
@@ -53,10 +55,23 @@ iframeSearchServer <- function(input, output, session, website, geneSymbol){
              "google"     = "https://www.google.com/search?q=%s",
              "rvarbase"   = "http://rv.psych.ac.cn/quickSearch.do?keyword=%s&submit=Search",
              "clinvar"    = "https://www.ncbi.nlm.nih.gov/clinvar/?term=%s[gene]",
-             "wiki"       = "http://localhost:3000/%s")
+             "wiki"       = "http://localhost:9091/%s")
 
      uri <- sprintf(url, goi)
-     if(woi %in% c("wiki", "ucsc")){
+     if(woi == "ucsc"){
+        uri <- sprintf("http://localhost:8000/geneLoc")
+        printf("ucsc %s", goi)
+        body.jsonString <- sprintf('%s', toJSON(list(gene=goi, genome="hg19", shoulder=100)))
+        printf("body.jsonString: ", body.jsonString)
+        r <- POST(uri, body=body.jsonString)
+        x <- fromJSON(content(r)[[1]])
+
+        uri <- sprintf("http://genome.ucsc.edu/cgi-bin/hgTracks?db=%s&position=%s:%d-%d",
+                       "hg19", x$chrom, x$start, x$end)
+        browseURL(uri)
+        return("")
+        }
+     if(woi %in% c("wiki")){
         browseURL(uri)
         return("")
         }
