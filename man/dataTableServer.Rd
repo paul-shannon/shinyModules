@@ -4,7 +4,17 @@
 \alias{dataTableServer}
 \title{the server for a DataTable shiny module}
 \usage{
-dataTableServer(id, input, output, session, tbl, selectionPolicy)
+dataTableServer(
+  id,
+  input,
+  output,
+  session,
+  tbl,
+  selectionPolicy = reactive("multiple"),
+  wrapLongTextInCells = reactive(TRUE),
+  searchString = reactive(""),
+  rownames.to.display = reactive("all")
+)
 }
 \arguments{
 \item{input}{enviroment provided by shiny}
@@ -15,19 +25,13 @@ dataTableServer(id, input, output, session, tbl, selectionPolicy)
 
 \item{tbl}{data.frame}
 
-\item{selectionPolicy}{character string, single, multiple or none}
+\item{selectionPolicy}{character string, "none", "single", or "multiple"}
 
-\item{selectionMechanism}{character string, manual or programmatic}
+\item{wrapLongTextInCells}{logical, TRUE or FALSE}
 
-\item{pageLength}{integer typically 5, 10, 25 or 50}
+\item{searchString}{character string, selects all rows with this, default "" (no search)}
 
-\item{visibleRows}{"all", "none", or a list of rownames}
-
-\item{selectedRows}{character string, reactive(NULL)  by default}
-
-\item{searchTerm}{character string, "" by default}
-
-\item{wrapLongTextInCells}{logcial default TRUE}
+\item{rownames.to.display}{character vector, default "all",}
 }
 \description{
 the server for a DataTable shiny module

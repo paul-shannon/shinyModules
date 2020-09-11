@@ -41,9 +41,12 @@ messageBoxUI <- function(id, title, boxWidth=200, boxHeight=30, fontSize=20, fon
 #'
 #' @export
 #'
-messageBoxServer <- function(input, output, session, newContent){
-  output$messageBox <- renderText(newContent())
-  }
+messageBoxServer <- function(id, input, output, session, newContent){
+   moduleServer(id, function(input, output, session){
+     output$messageBox <- renderText(newContent())
+     })
+
+} # messageBoxServer
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))
 

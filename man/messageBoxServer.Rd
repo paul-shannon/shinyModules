@@ -4,7 +4,7 @@
 \alias{messageBoxServer}
 \title{the server for a MessageBox shiny module}
 \usage{
-messageBoxServer(input, output, session, newContent)
+messageBoxServer(id, input, output, session, newContent)
 }
 \arguments{
 \item{input}{enviroment provide by shiny}

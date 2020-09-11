@@ -23,153 +23,71 @@ dataTableUI <- function(id){
 #' @param output enviroment provided by shiny
 #' @param session enviroment provided by shiny
 #' @param tbl data.frame
-#' @param selectionMechanism character string, manual or programmatic
-#' @param selectionPolicy character string, single, multiple or none
-#' @param pageLength  integer typically 5, 10, 25 or 50
-#' @param visibleRows  "all", "none", or a list of rownames
-#' @param selectedRows character string, reactive(NULL)  by default
-#' @param searchTerm character string, "" by default
-#' @param wrapLongTextInCells  logcial default TRUE
+#' @param selectionPolicy character string, "none", "single", or "multiple"
+#' @param wrapLongTextInCells logical, TRUE or FALSE
+#' @param searchString character string, selects all rows with this, default "" (no search)
+#' @param rownames.to.display character vector, default "all",
 #'
 #' @aliases dataTableServer
 #' @rdname dataTableServer
 #'
 #' @export
 #'
-dataTableServer <- function(id, input, output, session, tbl, selectionPolicy) {
-
-    moduleServer(id,  function(input, output, session) {
-
-    output$dataTable <- DT::renderDataTable({
-        tbl.sub <- tbl
-        DTclass <- "display"
-
-        selectionOption <- list(mode=selectionPolicy(), selected=NULL)
-        printf("---------- selectionOption")
-        print(selectionOption)
-        searchOption <- list() # list(caseInsensitive=TRUE, search=searchTermString)
-
-        DT::datatable(tbl.sub,
-                      rownames=TRUE,
-                      class="display nowrap",
-                      options=list(dom='<lfip<t>>',
-                                   scrollX=TRUE,
-                                   search=searchOption,
-                                   lengthMenu = c(3,5,10,50),
-                                   pageLength = 5,
-                                   paging=TRUE),
-                      selection=selectionOption)
-        # } # if length(visibleRowsImmediate) > 0
-    })  # renderDataTable
-
-  tableSelection <- reactive({
-     rownames(tbl)[input$dataTable_rows_selected]
-     })
-
-  return(tableSelection)
-  }) # dataTableServer
-
-} # dataTableServer
-#----------------------------------------------------------------------------------------------------
-#' the server for a DataTable shiny module
-#'
-#' @param input enviroment provided by shiny
-#' @param output enviroment provided by shiny
-#' @param session enviroment provided by shiny
-#' @param tbl data.frame
-#' @param selectionMechanism character string, manual or programmatic
-#' @param selectionPolicy character string, single, multiple or none
-#' @param pageLength  integer typically 5, 10, 25 or 50
-#' @param visibleRows  "all", "none", or a list of rownames
-#' @param selectedRows character string, reactive(NULL)  by default
-#' @param searchTerm character string, "" by default
-#' @param wrapLongTextInCells  logcial default TRUE
-#'
-#' @aliases dataTableServer.old
-#' @rdname dataTableServer.old
-#'
-#' @export
-#'
-dataTableServer.old <- function(input, output, session,
+dataTableServer <- function(id, input, output, session,
                             tbl,
-                            selectionMechanism=reactive("manual"),
-                            selectionPolicy=reactive("single"),
-                            pageLength=reactive(5),
-                            visibleRows=reactive(head(rownames(tbl))),
-                            selectedRows=reactive(NULL),
-                            searchTerm=reactive(NULL),
-                            wrapLongTextInCells=reactive(FALSE)) {
+                            selectionPolicy=reactive("multiple"),
+                            wrapLongTextInCells=reactive(TRUE),
+                            searchString=reactive(""),
+                            rownames.to.display=reactive("all")
+                            ){
 
-    output$dataTable <- DT::renderDataTable({
+  moduleServer(id,  function(input, output, session){
 
-        selectedRowNames <- selectedRows()
-        searchTermString <- searchTerm()
+     output$dataTable <- DT::renderDataTable({
 
-             #------------------------------------------------------------
-             # search mode, or row selection mode, or neither.
-             # cannot be both.  selection is given priority.
-             #------------------------------------------------------------
-
-        mode <- "neitherSelectionNorSearch"
-        if(!is.null(selectedRowNames)){
-           mode <- "selectRows"
-           #printf("selectedRowNames: %s", paste(selectedRowNames, collapse=","))
-           }
-        if(is.null(selectedRowNames)){
-           if(!is.null(searchTermString))
-              mode <- "search"
-           }
-
-        visibleRowsImmediate <- visibleRows()
-
-        tbl.sub <- data.frame()   # an empty table by default
-
-        if(length(visibleRowsImmediate) > 0){
-           if(visibleRowsImmediate[1] == "all")
+        tbl.sub <- tbl
+        rownames <- rownames.to.display()
+        if(length(rownames) == 0){
+            tbl.sub <- data.frame()
+        }else{
+           if(rownames[1] == "all")
               tbl.sub <- tbl
            else{
-              tbl.sub <- tbl[visibleRowsImmediate,]
-              }
-           } # if
+              rownames <- intersect(rownames, rownames(tbl))
+              if(length(rownames) > 0)
+                 tbl.sub <- tbl[rownames,]
+              } # else
+           } # major else
 
-        wrapText <- wrapLongTextInCells()
-        DTclass <- "display"
-        if(!wrapText)
+         selectionOption <- list(mode=selectionPolicy(), selected=NULL)
+         searchString <- searchString()
+         searchOptions <- list()
+         if(searchString != " - ")
+            searchOptions <- list(search=searchString, caseInsensitive=TRUE)
+
+         DTclass <- "display"
+         if(!wrapLongTextInCells())
             DTclass <- paste0(DTclass, " nowrap")
 
-        selection.mechanism <- selectionMechanism()
-        selection.policy <- selectionPolicy # ()
+         DT::datatable(tbl.sub,
+                       rownames=TRUE,
+                       class=DTclass,
+                       options=list(dom='<lfip<t>>',
+                                    scrollX=TRUE,
+                                    search=searchOptions,
+                                    lengthMenu = c(3,5,10,50),
+                                    pageLength = 5,
+                                    paging=TRUE),
+                       selection=selectionOption)
+         })  # renderDataTable
 
-        selectionOption <- list(mode=selection.policy)
-        searchOption <- list()
+      tableSelection <- reactive({
+         rownames(tbl)[input$dataTable_rows_selected]
+         })
+      return(tableSelection)
+    }) # moduleServer
 
 
-        #if(mode == "selectRows")
-        #   selectionOption <- list(mode=selectionPolicy(), selected=selectedRowNames)
-        if(mode == "search")
-           searchOption <- list(caseInsensitive=TRUE, search=searchTermString)
-
-        printf("---------- selectionOption")
-        print(selectionOption)
-        DT::datatable(tbl.sub,
-                      rownames=TRUE,
-                      class=DTclass,
-                      options=list(dom='<lfip<t>>',
-                                   scrollX=TRUE,
-                                   search=searchOption,
-                                   lengthMenu = c(3,5,10,50),
-                                   pageLength = pageLength(),
-                                   paging=TRUE),
-                      selection=selectionOption)
-        # } # if length(visibleRowsImmediate) > 0
-    })  # renderDataTable
-
-  tableSelection <- reactive({
-     rownames(tbl)[input$dataTable_rows_selected]
-     })
-
-  return(tableSelection)
-
-} # dataTableServer.old
+} # dataTableServer
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))

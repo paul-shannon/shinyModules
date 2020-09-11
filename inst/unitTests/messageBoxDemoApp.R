@@ -16,10 +16,8 @@ server <- function(input, output, session)
 
   randomText <- reactiveVal("")
 
-  messageBox1.contents <- callModule(messageBoxServer, "messageBox.1",
-                                     newContent=randomText)
-  messageBox2.contents <- callModule(messageBoxServer, "messageBox.2",
-                                     newContent=reactive(tolower(randomText())))
+  messageBox1.contents <- messageBoxServer("messageBox.1", newContent=randomText)
+  messageBox2.contents <- messageBoxServer("messageBox.2", newContent=reactive(tolower(randomText())))
 
   observeEvent(input$randomTextButton, ignoreInit=TRUE, {
      randomText(paste(sample(c(LETTERS, letters), 10, replace=TRUE), collapse=""))
