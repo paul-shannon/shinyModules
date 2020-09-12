@@ -33,7 +33,7 @@ ui <- fluidPage(
 #----------------------------------------------------------------------------------------------------
 server <- function(input, output, session)
 {
-    mainTable.selectedRows <- dataTableServer("mainTable", tbl=tbl.demo,
+    mainTable.selectedRows <- dataTableServer("mainTable", tbl=reactive(tbl.demo),
                                               selectionPolicy=reactive(input$rowSelectionPolicy),
                                               wrapLongTextInCells=reactive(input$wrapOrNoWrap=="yes"),
                                               searchString=reactive(input$termSearcher),
@@ -41,11 +41,11 @@ server <- function(input, output, session)
 
     messageBoxServer("selectResultsDisplay", newContent=mainTable.selectedRows)
 
-    subTable.selectedRows <- dataTableServer("subTable", tbl=tbl.demo,
+    subTable.selectedRows <- dataTableServer("subTable", tbl=reactive(tbl.demo),
                                              selectionPolicy=reactive("none"),
                                              rownames.to.display=mainTable.selectedRows)
 
 } # server
 #----------------------------------------------------------------------------------------------------
-runApp(shinyApp(ui, server), port=9033)
+runApp(shinyApp(ui, server), port=9038)
 

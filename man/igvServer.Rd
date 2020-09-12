@@ -5,6 +5,7 @@
 \title{the server for an igv.js shiny module}
 \usage{
 igvServer(
+  id,
   input,
   output,
   session,

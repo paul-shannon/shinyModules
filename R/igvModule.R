@@ -34,7 +34,7 @@ igvUI <- function(id){
 #'
 #' @export
 #'
-igvServer <- function(input, output, session,
+igvServer <- function(id, input, output, session,
                       genome,
                       locus,
                       width=800,
@@ -42,23 +42,10 @@ igvServer <- function(input, output, session,
                       geneModelDisplayMode="COLLAPSED",
                       geneModelTrackHeight=200) {
 
+  moduleServer(id, function(input, output, session){
+
     printf("--- igvServer, locus")
     print(locus)
-
-    observeEvent(input$bogus_trackClick, ignoreInit=TRUE, {
-       printf("bogus_trackClick event")
-       x <- input$trackClick
-       name.indices <- grep("name", names(x))
-       value.indices <- grep("value", names(x))
-       if(length(name.indices) == length(value.indices)){
-          clickData <- as.character(x[value.indices])
-          names(clickData) <- as.character(x[name.indices])
-          if("name" %in% names(clickData)){
-             entity <- clickData[["name"]]
-             printf("you clicked on entity '%s'", entity)
-             } # there is a name field
-          } # the data structure returned from javascript has #name = #value fields
-       })
 
     output$igv <- renderIgvShiny(
        igvShiny(list(
@@ -96,9 +83,10 @@ igvServer <- function(input, output, session,
         printf("returning selected entity")
         print(entity)
         entity
-        })
+        }) # igvSelection
 
-  return(igvSelection)
+      return(igvSelection)
+      }) # moduleServer
 
 
 } # igvServer

@@ -41,21 +41,21 @@ dataTableServer <- function(id, input, output, session,
                             rownames.to.display=reactive("all")
                             ){
 
-  moduleServer(id,  function(input, output, session){
+  moduleServer(id, function(input, output, session){
 
      output$dataTable <- DT::renderDataTable({
 
-        tbl.sub <- tbl
+        tbl.sub <- tbl()
         rownames <- rownames.to.display()
         if(length(rownames) == 0){
             tbl.sub <- data.frame()
         }else{
            if(rownames[1] == "all")
-              tbl.sub <- tbl
+              tbl.sub <- tbl()
            else{
               rownames <- intersect(rownames, rownames(tbl))
               if(length(rownames) > 0)
-                 tbl.sub <- tbl[rownames,]
+                 tbl.sub <- tbl()[rownames,]
               } # else
            } # major else
 
@@ -82,7 +82,7 @@ dataTableServer <- function(id, input, output, session,
          })  # renderDataTable
 
       tableSelection <- reactive({
-         rownames(tbl)[input$dataTable_rows_selected]
+         rownames(tbl())[input$dataTable_rows_selected]
          })
       return(tableSelection)
     }) # moduleServer
