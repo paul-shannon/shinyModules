@@ -15,7 +15,7 @@ printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 igvUI <- function(id){
   tagList(
-    igvShinyOutput(NS(id, 'igv'), height="600px")  # todo: add this to arg list
+    igvShinyOutput(NS(id, 'igv'), height="300px")  # todo: add this to arg list
     )
    }
 #----------------------------------------------------------------------------------------------------
@@ -46,16 +46,16 @@ igvServer <- function(id, input, output, session,
 
     printf("--- igvServer, locus")
     print(locus)
-
+    printf("width: %d   height: %d", width, height)
     output$igv <- renderIgvShiny(
-       igvShiny(list(
-          genomeName=genome,
-          initialLocus=locus,
-          width=width,
-          height=height,
-          displayMode=geneModelDisplayMode,
-          trackHeight=geneModelTrackHeight
-          ))
+                      igvShiny(options=list(genomeName=genome,
+                                            initialLocus=locus,
+                                            displayMode=geneModelDisplayMode,
+                                            trackHeight=geneModelTrackHeight
+                                            ),
+                               width=width,
+                               height=height
+                               )
         )
 
     igvSelection <- reactive({

@@ -11,18 +11,18 @@ tbl.gwas <- get(load("~/github/lcApps/gwas/danEvans/incoming/tbl.99.hg38.05.RDat
 tbl.gwas$name <- tbl.gwas$SNPS  # put the rsid into a column with a standard name
 
 ui <- fluidPage(
-   div(igvUI("igv"),
-       style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
    #actionButton("searchButton", "Search"),
-   actionButton("addSnpTrackButton", "Add SNP Track"),
    #actionButton("addGWASTrackButton", "Add Deelen99 GWAS"),
-   #actionButton("addConservationTrackButton", "Add Conservation Track"),
-   #actionButton("getChromLoc", "Get Region"),
-   messageBoxUI(id="messageBox.igv", title="igv selection", boxWidth= 600),
    div(dataTableUI("snpDataTable"),
           style="margin: 10px; margin-bottom: 30px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
    div(messageBoxUI(id="messageBox.snpTable", title="snps", boxWidth=600),
-          style="margin-left: 100px;")
+          style="margin-left: 100px; margin-bottom: 20px;"),
+   actionButton("addSnpTrackButton", "Add SNP Track"),
+   actionButton("addConservationTrackButton", "Add Conservation Track"),
+   actionButton("getChromLoc", "Get Region"),
+   div(igvUI("igv"),
+       style="margin: 10px; margin-bottom: 5px; padding: 10px; border: 3px solid gray; border-radius: 10px;"),
+   div(messageBoxUI(id="messageBox.igv", title="igv selection", boxWidth= 600), style="margin-left: 100px;")
    )
 #--------------------------------------------------------------------------------------------------------------
 server <- function(input, output, session){
@@ -41,7 +41,7 @@ server <- function(input, output, session){
                              genome="hg38",
                              geneModelDisplayMode="COLLAPSED",
                              locus="APOE",
-                             height=400)
+                             height=100)
 
    messageBoxServer("messageBox.igv", newContent=igvSelection)
 #
@@ -86,16 +86,16 @@ server <- function(input, output, session){
 #      loadGwasTrack(session, "Deelen99", tbl.gwas)
 #      })
 #
-#   observeEvent(input$addConservationTrackButton, {
-#       bw.file <- "~/s/examples/http/flaskForGenomeAnnotations/mimic-trena-igv-data/static/hg38.phastCons7way.bw"
-#       gr.region <- GRanges(seqnames="chr19", IRanges(start=44862811, end=44952378))
-#       gr.small <- import(con=bw.file, which=gr.region)
-#       tbl.bedGraph <- as.data.frame(gr.small)[, c("seqnames", "start", "end", "score")]
-#       colnames(tbl.bedGraph)[1] <- "chrom"
-#       tbl.bedGraph$chrom <- as.character(tbl.bedGraph$chrom)
-#       loadBedGraphTrack(session, "phast7", tbl.bedGraph, autoscale=TRUE)
-#      })
-#
+   observeEvent(input$addConservationTrackButton, {
+       bw.file <- "~/s/examples/http/flaskForGenomeAnnotations/mimic-trena-igv-data/static/hg38.phastCons7way.bw"
+       gr.region <- GRanges(seqnames="chr19", IRanges(start=44862811, end=44952378))
+       gr.small <- import(con=bw.file, which=gr.region)
+       tbl.bedGraph <- as.data.frame(gr.small)[, c("seqnames", "start", "end", "score")]
+       colnames(tbl.bedGraph)[1] <- "chrom"
+       tbl.bedGraph$chrom <- as.character(tbl.bedGraph$chrom)
+       loadBedGraphTrack(session, "phast7", tbl.bedGraph, autoscale=TRUE)
+      })
+
 } # server
 #--------------------------------------------------------------------------------------------------------------
 runApp(shinyApp(ui, server), port=9044)
